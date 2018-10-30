@@ -1,0 +1,32 @@
+{% extends 'inventory/main_base.html' %}
+{% block title %}<title>Inventory</title>{% endblock title %}
+{% block content %}{{ block.super }}
+<div class="container">
+    <div class="well-sm">
+        <h3>Add a new Item here</h3></div>
+
+    <form method="POST">
+      {% csrf_token %}
+
+
+         {% for field in form_item %}
+        <div class="col-md-8">
+            <div class="well-lg">
+           <div class="col-md-6" >
+            {{ field.label_tag }}
+               </div>
+           </div>
+            <div class="input col-md-6 mb-3">
+             {{ field }}
+           </div>
+        </div>
+
+
+            {% endfor %}
+
+  <input type="submit" value="Add Item" class="btn btn-success pull-right">
+
+    </form>
+
+</div>
+{% endblock content %}

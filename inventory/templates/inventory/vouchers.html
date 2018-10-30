@@ -1,0 +1,63 @@
+{% extends 'inventory/main_base.html' %}
+
+
+   <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+   <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+   <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
+    <script>$(document).ready(function() {
+    $('#example').DataTable();
+} );
+    </script>
+
+{% block title %}<title>Vouchers</title>{% endblock title %}
+
+
+{% block content %}{{ block.super }}
+{#    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>#}
+{#   <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>#}
+{#   <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>#}
+{##}
+{#    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">#}
+{#    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">#}
+{#    <script>$(document).ready(function() {#}
+{#    $('#example').DataTable();#}
+{#    } );#}
+{#    </script>#}
+{#Table containing voucher list#}
+    <div class="container">
+    <table id="example" class="table table-striped table-bordered" style="width:100%">
+        <thead>
+            <tr>
+{#                '''These are table headers'''#}
+                <th>Voucher Number</th>
+                <th>Date</th>
+                <th>Issued By</th>
+                <th>Issued To</th>
+
+            </tr>
+        </thead>
+        <tbody>
+
+                {% for data in voucher_names %}
+             <tr>
+{#                    '''Here we have table data#}
+{#                    with a link on every voucher#}
+{#                    hgjhjg'#}
+
+                    <td>{{ data.voucher_number }}<a href="/voucherinfo?pk={{ data.id }}" class="pull-right">View</a></td>
+                    <td>{{ data.date_issued }}</td>
+                    <td>{{ data.issued_by }}</td>
+                    <td>{{ data.issued_to }}</td>
+              {% endfor %}
+
+            </tr>
+
+         </tbody>
+
+    </table>
+    </div>
+{% endblock content%}
+

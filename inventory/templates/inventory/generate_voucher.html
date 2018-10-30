@@ -1,0 +1,161 @@
+{% extends 'inventory/main_base.html' %}
+{% block content %}{{ block.super }}
+    <div class="container">
+    <h3 class="text-center">Create a new voucher</h3>
+
+        <form autocomplete="off" class="form" method="post" action="{% url 'createvoucher' %}">{% csrf_token %}
+
+            <div class="form-group col-sm-8 order-md-1">
+                <div class="form-group col-md-6">
+                    <label for="issued_by">Issued By:</label>
+                    <input type="text" id="issued_by" class="form-control"  name="issued_by" autofocus required>
+                </div>
+                 <div class="form-group col-md-6">
+                    <label for="issued_to">Issued To:</label>
+                    <input type="text" id="issued_to" class="form-control"  name="issued_to" required>
+                 </div>
+
+                <div class="form-group col-md-6">
+                    <label for="warehouse_name">Warehouse:</label>
+                    <select  id="warehouse_name" class="form-control"  name="warehouse_name" required>
+                        {% for data in warehouse %}
+                        <option value="{{ data.id }}">{{ data.name }}</option>
+                        {% endfor %}
+                    </select>
+                 </div>
+                <div class="form-group col-md-6">
+                    <label for="item_name">Item:</label>
+                    <input type="text" id="item_name" class="form-control" value="" name="item_name" required>
+                 </div>
+                <div class="form-group col-md-6">
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" id="quantity" class="form-control"  name="quantity" required min="1">
+                 </div>
+                <div>
+                    <input type='submit' value="Submit" class=" btn btn-success col-md-6 ">
+                 </div>
+
+            </div>
+
+        </form>
+        <div class="alert-success">{{ msg }}</div>
+
+           <input type="hidden" value="{{ data_dict }}" id="lovlit" type="text">
+
+
+    </div>
+
+<script>
+function autocomplete(inp, arr) {
+
+  /*the autocomplete function takes two arguments,
+  the text field element and an array of possible autocompleted values:*/
+  var currentFocus;
+  /*execute a function when someone writes in the text field:*/
+  inp.addEventListener("input", function(e) {
+      var a, b, i, val = this.value;
+      /*close any already open lists of autocompleted values*/
+      closeAllLists();
+      if (!val) { return false;}
+      currentFocus = -1;
+      /*create a DIV element that will contain the items (values):*/
+      a = document.createElement("DIV");
+      a.setAttribute("id", this.id + "autocomplete-list");
+      a.setAttribute("class", "autocomplete-items");
+      /*append the DIV element as a child of the autocomplete container:*/
+      this.parentNode.appendChild(a);
+      /*for each item in the array...*/
+      for (i = 0; i < arr.length; i++) {
+        /*check if the item starts with the same letters as the text field value:*/
+        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+          /*create a DIV element for each matching element:*/
+          b = document.createElement("DIV");
+          /*make the matching letters bold:*/
+          b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+          b.innerHTML += arr[i].substr(val.length);
+          /*insert a input field that will hold the current array item's value:*/
+          b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+          /*execute a function when someone clicks on the item value (DIV element):*/
+          b.addEventListener("click", function(e) {
+              /*insert the value for the autocomplete text field:*/
+              inp.value = this.getElementsByTagName("input")[0].value;
+              /*close the list of autocompleted values,
+              (or any other open lists of autocompleted values:*/
+              closeAllLists();
+          });
+          a.appendChild(b);
+        }
+      }
+  });
+  /*execute a function presses a key on the keyboard:*/
+  inp.addEventListener("keydown", function(e) {
+      var x = document.getElementById(this.id + "autocomplete-list");
+      if (x) x = x.getElementsByTagName("div");
+      if (e.keyCode == 40) {
+        /*If the arrow DOWN key is pressed,
+        increase the currentFocus variable:*/
+        currentFocus++;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 38) { //up
+        /*If the arrow UP key is pressed,
+        decrease the currentFocus variable:*/
+        currentFocus--;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 13) {
+        /*If the ENTER key is pressed, prevent the form from being submitted,*/
+        e.preventDefault();
+        if (currentFocus > -1) {
+          /*and simulate a click on the "active" item:*/
+          if (x) x[currentFocus].click();
+        }
+      }
+  });
+  function addActive(x) {
+    /*a function to classify an item as "active":*/
+    if (!x) return false;
+    /*start by removing the "active" class on all items:*/
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = (x.length - 1);
+    /*add class "autocomplete-active":*/
+    x[currentFocus].classList.add("autocomplete-active");
+  }
+  function removeActive(x) {
+    /*a function to remove the "active" class from all autocomplete items:*/
+    for (var i = 0; i < x.length; i++) {
+      x[i].classList.remove("autocomplete-active");
+    }
+  }
+  function closeAllLists(elmnt) {
+    /*close all autocomplete lists in the document,
+    except the one passed as an argument:*/
+    var x = document.getElementsByClassName("autocomplete-items");
+    for (var i = 0; i < x.length; i++) {
+      if (elmnt != x[i] && elmnt != inp) {
+        x[i].parentNode.removeChild(x[i]);
+      }
+    }
+  }
+  /*execute a function when someone clicks in the document:*/
+  document.addEventListener("click", function (e) {
+      closeAllLists(e.target);
+  });
+}
+
+
+/*An array containing all the country names in the world:*/
+var items = document.getElementById("lovlit").value;
+items = items.split(',');
+
+{#var items = ['AMBU BAG PEDI (GREEN)', 'AMBU BAG (BLACK)', 'AMBU BAG (GREEN)', 'ARM BAND (R/C & SJAB)', 'BANNER SJAB (FLEX) FA POST', 'BANNER SJAB (FLEX)', 'BOWL WITH LID (MED) ENEMAL', 'BOWL WITH LID (SMALL) ENEMAL', 'BOWL WITH LID S/S', 'DRESSING DRUM S/S', 'EYE WASH CUP', 'FA BOX (BLACK)', 'FA BOX (LARGE)', 'FA BOX (MEDIUM)', 'FA BOX (SMALL)', 'FA BOX (THREE FOLD)', 'JUG ENEMAL', 'KIDNEY TRAY (SMALL) ENEMAL', 'KIDNEY TRAY (SMALL) S/S', 'MAYUR JUG 5 LTRS', 'MAYUR JUG 8 LTRS', 'OXY CYLLINDER (LARGE)', 'OXY CYLLINDER ()', 'OXY CYLLINDER (PORTABLE)', 'OXY CYLLINDER (LIGHT WEIGHT)', 'OXY CYLLINDER (MEDIUM)', 'OXY CYLLINDER (SMALL)', 'RECT TRAY (LARGE) ENEMAL', 'RECT TRAY (MID) ENEMAL', 'RECT TRAY (SMALL) ENEMAL', 'RECT TRAY WITH LID S/S', 'SPLINT SET WOODEN', 'TOWEL (BLUE)', 'TOWEL (WHITE PRINTED)', 'TOWEL (WHITE CHECK)', 'TOWEL WHITE (HAND)', 'TROLLEY MEDICINE', 'WASH BASIN WITH STAND (E)(L)', 'WASH BASIN WITH STAND (E)(S)', 'WASH BASIN WITH STAND (S)(S) (L)', 'WASH BASIN WITH STAND (S)(S) (S)', 'BANNER YELLOW', 'BANNER WHITE', 'ASSOCIATION', 'BRIGADE FLAG (BLACK)', 'COLOR (MARCH PAST)', 'COMBINED FLAG', 'FLAG WITH STRIP (PLASTIC)', 'FLAG WITHOUT STRIP (PLASTIC)', 'RED CROSS (LARGE)', 'RED CROSS (MEDIUM)', 'RED CROSS (SMALL)', 'BLACK CHECK/PLAIN', 'BLUE', 'BLUE CHECK', 'COLD', 'PINK', 'RED', 'WHITE', 'AMBULANCE VEHICLE'];#}
+
+/*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
+autocomplete(document.getElementById("item_name"), items);
+</script>
+
+{% endblock %}
+
+
+

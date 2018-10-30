@@ -1,0 +1,47 @@
+{% extends 'inventory/main_base.html' %}
+{% block title %}<title>Inventory</title>{% endblock title %}
+{% block content %}{{ block.super }}
+
+   <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+   <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+   <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+
+{#    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">#}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css">
+{#    	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">#}
+
+{#    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">#}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+    <script>$(document).ready(function() {
+    $('#example').DataTable();
+    } );
+    </script>
+    <div class="container">
+    <table id="example" class="table table-striped table-bordered" style="width:100%">
+        <thead>
+            <tr>
+                <th>Name</th>
+                {% for ware in warehouse %}
+
+                <th>{{ ware.name }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+
+                {% for data in item %}
+          <tr>
+
+            <td>{{ data.name }}</td>
+              {% for quantity in data.stock %}
+            <td>{{ quantity }}</td>
+              {% endfor %}
+
+            </tr>
+            {% endfor %}
+         </tbody>
+
+    </table>
+    </div>
+{% endblock content%}
+
